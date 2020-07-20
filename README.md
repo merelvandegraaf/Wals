@@ -1,2 +1,3 @@
 # Wals
-Code voor een weerstation op de Pi.
+python code voor een weerstaton op de pi
+Laat temperatuur zien in een bewegende grafiek
