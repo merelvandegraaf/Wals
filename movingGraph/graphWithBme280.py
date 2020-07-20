@@ -23,6 +23,7 @@ def animate(i, xs, ys):
     # Read temperature (Celsius) from BME280
     data = bme280.sample(bus, address, calibration_params)
     temp_c = round(data.temperature, 2)
+    print(data.temperature, data.humidity, data.pressure)
 
     # Add x and y to lists
     xs.append(dt.datetime.now().strftime('%H:%M:%S.%f'))
@@ -39,9 +40,9 @@ def animate(i, xs, ys):
     # Format plot
     plt.xticks(rotation=45, ha='right')
     plt.subplots_adjust(bottom=0.30)
-    plt.title('TMP102 Temperature over Time')
+    plt.title('BME290 Temperature over Time')
     plt.ylabel('Temperature (deg C)')
 
 # Set up plot to call animate() function periodically
-ani = animation.FuncAnimation(fig, animate, fargs=(xs, ys), interval=1000)
+ani = animation.FuncAnimation(fig, animate, fargs=(xs, ys), interval=500)
 plt.show()
