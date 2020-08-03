@@ -1,6 +1,7 @@
 import smbus2
 import bme280
 import MySQLdb
+import time
 
 #params for bme)280
 port = 1
@@ -28,6 +29,8 @@ while True:
         db.rollback()
         print("Failed writing to database")
 
-    cur.close()
-    db.close()
-    break
+    time.sleep(10)
+    
+cur.close()
+db.close()
+
