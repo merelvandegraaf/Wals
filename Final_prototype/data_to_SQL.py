@@ -14,12 +14,10 @@ calibration_params = bme280.load_calibration_params(bus, address)
 db = MySQLdb.connect(host="localhost", user="root",passwd="merel", db="wals_database")
 cur = db.cursor()
 
-sql = ("""DELETE FROM tempLog""")
-try:
-    cur.execute(*sql)
-    db.commit()
-except:
-    db.rollback()
+sql_delete = ("""DELETE FROM tempLog""")
+cur.execute(sql_delete)
+db.commit()
+
 
 try:
     while running:
