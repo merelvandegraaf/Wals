@@ -16,7 +16,8 @@ $result = $conn->query($sql);
 
 function exportDatabase($setRec){
 	$columnHeader = '';  
-$columnHeader = "User Id" . "\t" . "First Name" . "\t" . "Last Name" . "\t";  
+$columnHeader = "User Id" . "\t" . "First Name" . "\t" . "Last Name" . "\t" 
+ . "Test" . "\t" . "test 2" . "\t"  . "test 3" . "\t";  
 $setData = '';  
   while ($rec = mysqli_fetch_row($setRec)) {  
     $rowData = '';  
