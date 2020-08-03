@@ -18,3 +18,24 @@ voor nodige programma's doe:
 `$ pip install matplotlib`  
 `$ sudo apt install python-backports.functools-lru-cache`  
 `$ sudo apt-get install python-gi-cairo`
+
+## Webserver
+
+Installeren:  
+`$ sudo apt-get install apache2 php libapache2-mod-php`  
+`$ sudo apt install mariadb-server php-mysql`  
+`$ sudo mysql --user=root`  
+`DROP USER 'root'@'localhost';`  
+`CREATE USER 'root'@'localhost' IDENTIFIED BY  'WACHTWOORD';`  
+`GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;`  
+`$ sudo apt-get install python-mysqldb`  
+`$ mysql -u root -p`  
+
+volg link: https://wingoodharry.wordpress.com/2015/01/05/raspberry-pi-temperature-sensor-web-server-part-2-setting-up-and-writing-to-a-mysql-database/  
+database heeft de volgende velden:  
+* GPS_lon Decimal(9,6)
+* GPS_lat Decimal(9,6)
+* air_temp Decimal(5,3)
+* air_pressure Decimal(6,2)
+* air_humidity Decimal(5,2)
+* temp Decimal(6,3)
