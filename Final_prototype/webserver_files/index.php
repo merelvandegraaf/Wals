@@ -13,6 +13,29 @@ if($conn->connect_error){
 
 $sql = "SELECT * FROM tempLog";
 $result = $conn->query($sql);
+
+function exportDatabase($results){
+	$timestamp = time();
+	$filename = 'Export_wals_data_' . $timestamp . '.xls';
+	
+	header("Content-Type: application/vnd.ms-excel");
+	header("Content-Disposition: attachment; filename=\"$filename\"");
+	
+	$isPrintHeader = false;
+	foreach($results->fetch_assoc() as $row){
+		//if(! $isPrintHeader){
+			//echo implode("\t", array_keys($row)) . "\n";
+			//$isPrintHeader = true;
+		//}
+		echo implode("\t", array_values($row)) . "\n";
+	}
+	exit();
+}
+
+if(isset($_POST[export])){
+exportDatabase($result);
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -22,7 +45,12 @@ $result = $conn->query($sql);
 </head>
 <body>
 <h1> <?php echo "Wals data"; ?></h1>
-<a href="http://localhost/download.php">download hier data</a>
+
+<form action="" method="post">
+<button type="submit" id="btnExport" name='export'
+value="Export to Excel" class="btn btn-info">Export to Excel</button>
+</form>
+
 <?php
 if ($result->num_rows > 0){
 	//output data
