@@ -14,22 +14,25 @@ if($conn->connect_error){
 $sql = "SELECT * FROM tempLog";
 $result = $conn->query($sql);
 
-function exportDatabase($records){
-	$timestamp = time();
-	$filename = 'Export_wals_data_' . $timestamp . '.xls';
-	header("Content-Type: application/vnd.ms-excel");
-	header("Content-Disposition: attachment; filename=\"$filename\"");
-	$heading = false;
-		if(!empty($records))
-		  foreach($records as $row) {
-			if(!$heading) {
-			  // display field/column names as a first row
-			  echo implode("\t", array_keys($row)) . "\n";
-			  $heading = true;
-			}
-			echo implode("\t", array_values($row)) . "\n";
-		  }
-		exit;
+function exportDatabase($setRec){
+	$columnHeader = '';  
+$columnHeader = "User Id" . "\t" . "First Name" . "\t" . "Last Name" . "\t";  
+$setData = '';  
+  while ($rec = mysqli_fetch_row($setRec)) {  
+    $rowData = '';  
+    foreach ($rec as $value) {  
+        $value = '"' . $value . '"' . "\t";  
+        $rowData .= $value;  
+    }  
+    $setData .= trim($rowData) . "\n";  
+}  
+  
+header("Content-type: application/octet-stream");  
+header("Content-Disposition: attachment; filename=User_Detail.xls");  
+header("Pragma: no-cache");  
+header("Expires: 0");  
+
+  echo ucwords($columnHeader) . "\n" . $setData . "\n";  
 }
 
 if(isset($_POST[export])){
