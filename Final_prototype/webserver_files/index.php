@@ -22,6 +22,7 @@ $result = $conn->query($sql);
 </head>
 <body>
 <h1> <?php echo "Wals data"; ?></h1>
+<a href="http://localhost/download.php">download hier data</a>
 <?php
 if ($result->num_rows > 0){
 	//output data
