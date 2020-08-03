@@ -14,22 +14,22 @@ if($conn->connect_error){
 $sql = "SELECT * FROM tempLog";
 $result = $conn->query($sql);
 
-function exportDatabase($results){
+function exportDatabase($records){
 	$timestamp = time();
 	$filename = 'Export_wals_data_' . $timestamp . '.xls';
-	
 	header("Content-Type: application/vnd.ms-excel");
 	header("Content-Disposition: attachment; filename=\"$filename\"");
-	
-	$isPrintHeader = false;
-	foreach($results->fetch_assoc() as $row){
-		//if(! $isPrintHeader){
-			//echo implode("\t", array_keys($row)) . "\n";
-			//$isPrintHeader = true;
-		//}
-		echo implode("\t", array_values($row)) . "\n";
-	}
-	exit();
+	$heading = false;
+		if(!empty($records))
+		  foreach($records as $row) {
+			if(!$heading) {
+			  // display field/column names as a first row
+			  echo implode("\t", array_keys($row)) . "\n";
+			  $heading = true;
+			}
+			echo implode("\t", array_values($row)) . "\n";
+		  }
+		exit;
 }
 
 if(isset($_POST[export])){
