@@ -14,53 +14,36 @@ if($conn->connect_error){
 $sql = "SELECT * FROM tempLog";
 $result = $conn->query($sql);
 
-function exportDatabase(){
-
-$sql = "SELECT * FROM tempLog";
-$results = $conn->query($sql);
+function exportDatabase($result){
 	
-$rows = results->fetch_assoc();
- 
- //The name of the Excel file that we want to force the
-//browser to download.
-$filename = 'members.xls';
- 
-//Send the correct headers to the browser so that it knows
-//it is downloading an Excel file.
-header("Content-Type: application/xls");    
-header("Content-Disposition: attachment; filename=$filename");  
-header("Pragma: no-cache"); 
-header("Expires: 0");
-
-//Define the separator line
-$separator = "\t";
- 
-//If our query returned rows
-if(!empty($rows)){
-    
-    //Dynamically print out the column names as the first row in the document.
-    //This means that each Excel column will have a header.
-    echo implode($separator, array_keys($rows[0])) . "\n";
-    
-    //Loop through the rows
-    foreach($rows as $row){
+	$result = $stmt->get_result();
         
-        //Clean the data and remove any special characters that might conflict
-        foreach($row as $k => $v){
-            $row[$k] = str_replace($separator . "$", "", $row[$k]);
-            $row[$k] = preg_replace("/\r\n|\n\r|\n|\r/", " ", $row[$k]);
-            $row[$k] = trim($row[$k]);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $resultset[] = $row;
+            }
         }
+		$productResult = $resultset;
+        $timestamp = time();
+        $filename = 'Export_excel_' . $timestamp . '.xls';
         
-        //Implode and print the columns out using the 
-        //$separator as the glue parameter
-        echo implode($separator, $row) . "\n";
+        header("Content-Type: application/vnd.ms-excel");
+        header("Content-Disposition: attachment; filename=\"$filename\"");
+        
+        $isPrintHeader = false;
+        foreach ($productResult as $row) {
+            if (! $isPrintHeader) {
+                echo implode("\t", array_keys($row)) . "\n";
+                $isPrintHeader = true;
+            }
+            echo implode("\t", array_values($row)) . "\n";
+        }
+        exit();
     }
-}
 }
 
 if(isset($_POST[export])){
-exportDatabase();
+exportDatabase($result);
 }
 
 ?>
