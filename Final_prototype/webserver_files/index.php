@@ -14,36 +14,43 @@ if($conn->connect_error){
 $sql = "SELECT * FROM tempLog";
 $result = $conn->query($sql);
 
-function exportDatabase($result){
-	
-	$result = $stmt->get_result();
-        
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $resultset[] = $row;
-            }
-        }
-		$productResult = $resultset;
-        $timestamp = time();
-        $filename = 'Export_excel_' . $timestamp . '.xls';
-        
-        header("Content-Type: application/vnd.ms-excel");
-        header("Content-Disposition: attachment; filename=\"$filename\"");
-        
-        $isPrintHeader = false;
-        foreach ($productResult as $row) {
-            if (! $isPrintHeader) {
-                echo implode("\t", array_keys($row)) . "\n";
-                $isPrintHeader = true;
-            }
-            echo implode("\t", array_values($row)) . "\n";
-        }
-        exit();
+function cleanData(&$str)
+  {
+    if($str == 't') $str = 'TRUE';
+    if($str == 'f') $str = 'FALSE';
+    if(preg_match("/^0/", $str) || preg_match("/^\+?\d{8,}$/", $str) || preg_match("/^\d{4}.\d{1,2}.\d{1,2}/", $str)) {
+      $str = "'$str";
     }
+    if(strstr($str, '"')) $str = '"' . str_replace('"', '""', $str) . '"';
+  }
+
+function exportDatabase(){
+
+  // filename for download
+  $filename = "website_data_" . date('Ymd') . ".csv";
+
+  header("Content-Disposition: attachment; filename=\"$filename\"");
+  header("Content-Type: text/csv");
+
+  $out = fopen("php://output", 'w');
+
+  $flag = false;
+  while(false !== ($row = pg_fetch_assoc($result))) {
+    if(!$flag) {
+      // display field/column names as first row
+      fputcsv($out, array_keys($row), ',', '"');
+      $flag = true;
+    }
+    array_walk($row, __NAMESPACE__ . '\cleanData');
+    fputcsv($out, array_values($row), ',', '"');
+  }
+
+  fclose($out);
+  exit;
 }
 
 if(isset($_POST[export])){
-exportDatabase($result);
+exportDatabase();
 }
 
 ?>
