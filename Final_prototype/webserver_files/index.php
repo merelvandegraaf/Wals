@@ -47,7 +47,7 @@ ExportFile($result);
 
 <form action="" method="post">
 <button type="submit" id="btnExport" name='export'
-value="Export to Excel" class="btn btn-info">Export to Excel</button>
+value="Export to Excel">Export to Excel</button>
 </form>
 
 <?php
