@@ -4,6 +4,7 @@ import MySQLdb
 import time
 
 running = True
+id = 0
 #params for bme)280
 port = 1
 address = 0x76
@@ -22,7 +23,7 @@ db.commit()
 try:
     while running:
         data = bme280.sample(bus, address, calibration_params)
-        sql = ("""INSERT INTO tempLog (GPS_lon,GPS_lat,air_temp,air_pressure,air_humidity,temp) VALUES (%s,%s,%s,%s,%s,%s)""", (0, 0, data.temperature, data.pressure, data.humidity, 0))
+        sql = ("""INSERT INTO tempLog (GPS_lon,GPS_lat,air_temp,air_pressure,air_humidity,temp, id) VALUES (%s,%s,%s,%s,%s,%s, %s)""", (0, 0, data.temperature, data.pressure, data.humidity, 0, id))
         try:
             print("Writing to database...")
             # Execute the SQL command
@@ -35,6 +36,7 @@ try:
             db.rollback()
             print("Failed writing to database")
         time.sleep(10)
+        id = id + 1
 
 except (KeyboardInterrupt):
     running = False

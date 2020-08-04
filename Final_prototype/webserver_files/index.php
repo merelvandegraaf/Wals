@@ -12,7 +12,10 @@ if($conn->connect_error){
 }
 
 $sql = "SELECT * FROM tempLog";
+$sql2 = "SELECT * FROM tempLog Order By id desc limit 1";
 $result = $conn->query($sql);
+$result2 = $conn->query($sql2);
+
 
 function ExportFile($records) {
 	$filename = "websiteData.xls";		 
@@ -53,6 +56,10 @@ value="Export to Excel">Export to Excel</button>
 <?php
 if ($result->num_rows > 0){
 	//output data
+	while($row = $result2->fetch_assoc()){
+		echo "<p>".$row[temp]."</p>";
+	}
+
 	echo "<table> <tr><th>GPS lon</th><th>GPS lat</th><th>air temp</th><th>air pressure</th>
 	<th>air humidity</th><th>temp</th></tr>";
 	while($row = $result->fetch_assoc()){
