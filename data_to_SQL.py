@@ -1,7 +1,6 @@
 import smbus2
 import bme280
 import MySQLdb
-from gps import *
 import os, glob, time
 
 class DS18B20(object):
@@ -39,20 +38,6 @@ class DS18B20(object):
 
         return temp_c
 
-
-def getPositionData(gps):
-    nx = gpsd.next()
-    # For a list of all supported classes and fields refer to:
-    # https://gpsd.gitlab.io/gpsd/gpsd_json.html
-    if nx['class'] == 'TPV':
-        GPS_lat = getattr(nx,'lat', "Unknown")
-        GPS_lon = getattr(nx,'lon', "Unknown")
-    else:
-        return 0
-
-
-gpsd = gps(mode=WATCH_ENABLE|WATCH_NEWSTYLE)
-
 running = True
 id = 0
 #params for bme)280
@@ -62,8 +47,6 @@ bus = smbus2.SMBus(port)
 calibration_params = bme280.load_calibration_params(bus, address)
 
 tempsensor = DS18B20()
-GPS_lat = 0
-GPS_lon = 0
 
 # Variables for MySQL
 db = MySQLdb.connect(host="localhost", user="root",passwd="merel", db="wals_database")
@@ -77,7 +60,6 @@ db.commit()
 try:
     while running:
         data = bme280.sample(bus, address, calibration_params)
-        getPositionData(gpsd)
         sql = ("""INSERT INTO tempLog (GPS_lon,GPS_lat,air_temp,air_pressure,air_humidity,temp, id) VALUES (%s,%s,%s,%s,%s,%s, %s)""", (0, 0, data.temperature, data.pressure, data.humidity, tempsensor.read_temp(), id))
         try:
             print("Writing to database...")

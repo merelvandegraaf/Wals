@@ -1,3 +1,5 @@
+#/usr/bin/python
+
 import smbus2
 import bme280
 import MySQLdb
