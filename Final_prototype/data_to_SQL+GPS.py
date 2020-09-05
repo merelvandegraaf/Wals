@@ -45,10 +45,9 @@ def getPositionData(gps):
     # For a list of all supported classes and fields refer to:
     # https://gpsd.gitlab.io/gpsd/gpsd_json.html
     if nx['class'] == 'TPV':
-        GPS_lat = getattr(nx,'lat', "Unknown")
-        GPS_lon = getattr(nx,'lon', "Unknown")
-    else:
-        return 0
+        latitude = getattr(nx,'lat', "Unknown")
+        longitude = getattr(nx,'lon', "Unknown")
+        print( "Your position: lon = " + str(longitude) + ", lat = " + str(latitude))
 
 
 gpsd = gps(mode=WATCH_ENABLE|WATCH_NEWSTYLE)
@@ -62,8 +61,6 @@ bus = smbus2.SMBus(port)
 calibration_params = bme280.load_calibration_params(bus, address)
 
 tempsensor = DS18B20()
-GPS_lat = 0
-GPS_lon = 0
 
 # Variables for MySQL
 db = MySQLdb.connect(host="localhost", user="root",passwd="merel", db="wals_database")
