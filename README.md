@@ -39,3 +39,10 @@ database heeft de volgende velden:
 * air_pressure Decimal(6,2)
 * air_humidity Decimal(5,2)
 * temp Decimal(6,3)
+* id 
+
+## GPS  
+`cat /dev/serial0`  
+aan gps wiebelen tot je data ontvangt  
+laten opstarten tot lampje knippert  
+`sudo gpsd /dev/serial0 -F /var/run/gpsd.sock`
