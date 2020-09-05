@@ -40,16 +40,6 @@ class DS18B20(object):
         return temp_c
 
 
-def getPositionData(gps):
-    nx = gpsd.next()
-    # For a list of all supported classes and fields refer to:
-    # https://gpsd.gitlab.io/gpsd/gpsd_json.html
-    if nx['class'] == 'TPV':
-        latitude = getattr(nx,'lat', "Unknown")
-        longitude = getattr(nx,'lon', "Unknown")
-        print( "Your position: lon = " + str(longitude) + ", lat = " + str(latitude))
-
-
 gpsd = gps(mode=WATCH_ENABLE|WATCH_NEWSTYLE)
 
 running = True
@@ -74,8 +64,14 @@ db.commit()
 try:
     while running:
         data = bme280.sample(bus, address, calibration_params)
-        getPositionData(gpsd)
-        sql = ("""INSERT INTO tempLog (GPS_lon,GPS_lat,air_temp,air_pressure,air_humidity,temp, id) VALUES (%s,%s,%s,%s,%s,%s, %s)""", (0, 0, data.temperature, data.pressure, data.humidity, tempsensor.read_temp(), id))
+        nx = gpsd.next()
+        # For a list of all supported classes and fields refer to:
+        # https://gpsd.gitlab.io/gpsd/gpsd_json.html
+        if nx['class'] == 'TPV':
+            latitude = getattr(nx, 'lat', "Unknown")
+            longitude = getattr(nx, 'lon', "Unknown")
+            print("Your position: lon = " + str(longitude) + ", lat = " + str(latitude))
+        sql = ("""INSERT INTO tempLog (longitude,latitude,air_temp,air_pressure,air_humidity,temp, id) VALUES (%s,%s,%s,%s,%s,%s, %s)""", (0, 0, data.temperature, data.pressure, data.humidity, tempsensor.read_temp(), id))
         try:
             print("Writing to database...")
             # Execute the SQL command
