@@ -42,7 +42,4 @@ database heeft de volgende velden:
 * id 
 
 ## GPS  
-`cat /dev/serial0`  
-aan gps wiebelen tot je data ontvangt  
-laten opstarten tot lampje knippert  
-`sudo gpsd /dev/serial0 -F /var/run/gpsd.sock`
+startup script runnen
